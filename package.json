@@ -1,0 +1,29 @@
+{
+  "name": "use-data-service",
+  "version": "1.0.5",
+  "description": "Data Service Hook",
+  "devDependencies": {
+    "rollup": "^1.17.0",
+    "rollup-plugin-typescript2": "^0.22.0",
+    "typescript": "^3.5.3"
+  },
+  "main": "dist/index.js",
+  "module": "dist/index.es.js",
+  "files": [
+    "dist"
+  ],
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "rollup -c",
+    "watch": "rollup -cw"
+  },
+  "author": "Quang Thinh <quangthinh.dico@gmail.com>",
+  "license": "MIT",
+  "peerDependencies": {
+  },
+  "dependencies": {
+    "@types/react": "^16.8.23",
+    "react": "^16.8.6",
+    "use-deep-compare-effect": "^1.2.0"
+  }
+}
