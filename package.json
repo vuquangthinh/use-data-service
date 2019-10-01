@@ -1,6 +1,6 @@
 {
   "name": "use-data-service",
-  "version": "1.0.7",
+  "version": "1.0.9",
   "description": "Data Service Hook",
   "devDependencies": {
     "rollup": "^1.17.0",
