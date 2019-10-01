@@ -24,28 +24,33 @@ export default function useDataService(service: ServiceFn, params: ServiceParams
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState({});
   const [error, setError] = useState(null);
+  
 
   useDeepCompareEffect(
     () => {
+      let isMounted = true;
       (async () => {
         if (!loading) {
-          setLoading(true);
+          isMounted && setLoading(true);
         }
 
         const response = await service(params);
 
         if (response) {
           if (response.success) {
-            setData(response.data);
+            isMounted && setData(response.data);
           } else {
-            setError(response.data);
+            isMounted && setError(response.data);
           }
-          setLoading(false);
+          isMounted && setLoading(false);
         } else {
           // eslint-disable-next-line no-console
           console.warn('invalid error', service, params);
         }
       })();
+      return () => {
+        isMounted = false;
+      }
     },
     [params, EMPTY_OBJECT]
   );
