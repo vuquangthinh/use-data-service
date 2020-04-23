@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useReducer } from "react";
 const m = require("use-deep-compare-effect");
 
 const useDeepCompareEffect = m.default;
@@ -8,7 +8,8 @@ const EMPTY_OBJECT = {};
 
 export interface ServiceResult {
   success: boolean,
-  data: any
+  data: any,
+  error: any
 }
 
 export type ServiceParams = any;
@@ -20,30 +21,39 @@ export interface ServiceFn {
 
 export type HookResult = [boolean, any, any];
 
+function reducer(
+  state : any, { payload, type } : any) {
+  switch (type) {
+    case 'replace_state':
+      return { ...state, ...payload };
+    default:
+      return state;
+  }
+}
+ 
 export default function useDataService(service: ServiceFn, params: ServiceParams) : HookResult {
-  const [loading, setLoading] = useState(true);
-  const [data, setData] = useState({});
-  const [error, setError] = useState(null);
-  
+  const [{ loading, data, error }, dispatch] = useReducer(reducer, {
+    loading: false,
+    data: {},
+    error: null,
+  });
 
   useDeepCompareEffect(
     () => {
       let isMounted = true;
       (async () => {
         if (!loading) {
-          isMounted && setLoading(true);
+          isMounted && dispatch({ type: 'replace_state', payload: { loading: true }});
         }
 
         const response = await service(params);
 
         if (response) {
           if (response.success) {
-            isMounted && setData(response.data);
-            isMounted && setError(null);
+            isMounted && dispatch({ type: 'replace_state', payload: { loading: false, data: response.data, error: null }});
           } else {
-            isMounted && setError(response.data);
+            isMounted && dispatch({ type: 'replace_state', payload: { loading: false, error: response.error }});
           }
-          isMounted && setLoading(false);
         } else {
           // eslint-disable-next-line no-console
           console.warn('invalid error', service, params);
