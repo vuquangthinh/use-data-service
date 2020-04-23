@@ -39,6 +39,7 @@ export default function useDataService(service: ServiceFn, params: ServiceParams
         if (response) {
           if (response.success) {
             isMounted && setData(response.data);
+            isMounted && setError(null);
           } else {
             isMounted && setError(response.data);
           }
